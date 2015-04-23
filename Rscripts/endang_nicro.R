@@ -13,24 +13,41 @@ library (adehabitatHS)
 library (roxygen2)
 library (celestial)
 data(wrld_simpl) #create the World map with borders
-
+install.packages ("celestial")
+library(celestial)
 ##trasfering data from our observations in czech republic
-setwd ("C:/Users/jakubecp/Dropbox/SGEM_2015/Article_1")
+setwd ("C:/Users/jakubecp/Dropbox/SGEM_2015/Article_1")# skola
+setwd ("C:/Users/pavel/Downloads/Dropbox/SGEM_2015/Article_1/") #doma
 cz.nic.raw = read.csv ("nicr.czech.csv", header= TRUE, sep=";")
 head(cz.nic.raw)
+## first solution for transformation of DMS into the decimal degrees 
+## with function convert
 convert<-function(coord){
-  tmp1=strsplit(coord,"°")
-  tmp2=strsplit(tmp1[[1]][2],"'")
-  tmp3=strsplit(tmp2[[1]][2],"\"")
+  tmp1=strsplit(coord,"D")
+  tmp2=strsplit(tmp1[[1]][2],"M")
+  tmp3=strsplit(tmp2[[1]][2],"S")
   dec=c(as.numeric(tmp1[[1]][1]),as.numeric(tmp2[[1]][1]),as.numeric(tmp3[[1]]))
   c<-abs(dec[1])+dec[2]/60+dec[3]/3600
   c<-ifelse(dec[1]<0,-c,c)
   return(c)
 }
-as.character (lat)
-lat=cz.nic.raw$lat
-tm1=strsplit (lat,"D")
-convert (cz.nic.raw$lat)
+n1=length(cz.nic.raw$lat)
+n2=length(cz.nic.raw$long)
+cz.lat= c()
+cz.long=c()
+for (i in 1:n1) {
+  cz.lat[i]=convert (as.character (cz.nic.raw[i,5]))
+  cz.long[i]=convert (as.character (cz.nic.raw[i,6]))
+  
+}
+## second solution for transformation of DMS to decimal degrees
+## with celestila packages and function dms2deg
+cz.lat2 = c()
+cz.long2 = c()
+for (i in 1:n1) {
+  cz.lat2[i]=dms2deg (as.character (cz.nic.raw[i,5]), sep="DMS")
+  cz.long2[i]=dms2deg (as.character (cz.nic.raw[i,6]), sep="DMS")
+}
 #RAW data from GBIF (only records with coordinates and you should set up upper limit of them)
 n.ant<- occ_search(scientificName = "Nicrophorus antennatus",
                            hasCoordinate= TRUE, limit = 500)
