@@ -13,8 +13,6 @@ library (adehabitatHS)
 library (roxygen2)
 library (celestial)
 data(wrld_simpl) #create the World map with borders
-install.packages ("celestial")
-library(celestial)
 ##trasfering data from our observations in czech republic
 setwd ("C:/Users/jakubecp/Dropbox/SGEM_2015/Article_1")# skola
 setwd ("C:/Users/pavel/Downloads/Dropbox/SGEM_2015/Article_1/") #doma
@@ -42,18 +40,30 @@ for (i in 1:n1) {
 }
 ## second solution for transformation of DMS to decimal degrees
 ## with celestila packages and function dms2deg
-cz.lat2 = c()
-cz.long2 = c()
-for (i in 1:n1) {
-  cz.lat2[i]=dms2deg (as.character (cz.nic.raw[i,5]), sep="DMS")
-  cz.long2[i]=dms2deg (as.character (cz.nic.raw[i,6]), sep="DMS")
+n=length(cz.nic.raw$lat)
+cz.lat = c()
+cz.long = c()
+for (i in 1:n) {
+  cz.lat[i]=dms2deg (as.character (cz.nic.raw[i,5]), sep="DMS")
+  cz.long[i]=dms2deg (as.character (cz.nic.raw[i,6]), sep="DMS")
 }
+
 #RAW data from GBIF (only records with coordinates and you should set up upper limit of them)
 n.ant<- occ_search(scientificName = "Nicrophorus antennatus",
                            hasCoordinate= TRUE, limit = 500)
 #coordinates of observations (filter out NAs and obvious mistakes!)
 coord <- data.frame (long = n.ant$data$decimalLongitude ,
                      lat= n.ant$data$decimalLatitude)
+
+## merge three datasets cz.lat, cz.long, antennatus (0,1), 
+## + decimalLongitude and decimalLatitude
+# new line to coord data frame with presence/absence data
+antenn = c(1,1,1,1,1,1,1,1,1,1)
+coord = data.frame (coord, antenn)
+## bind data from previous manipulation (dms to dd) with presence/absence data
+coord.cz = data.frame (long = cz.long, lat = cz.lat, antenn = cz.nic.raw$antennatus)
+
+
 X11()
 plot (coord, xlim=c(0,20), ylim=c(30,50))
 plot (wrld_simpl, add=T)
