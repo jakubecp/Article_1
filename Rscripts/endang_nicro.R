@@ -62,10 +62,17 @@ antenn = c(1,1,1,1,1,1,1,1,1,1)
 coord = data.frame (coord, antenn)
 ## bind data from previous manipulation (dms to dd) with presence/absence data
 coord.cz = data.frame (long = cz.long, lat = cz.lat, antenn = cz.nic.raw$antennatus)
+## bind both dataframes (GBIF + CZ) together
+coord.full = rbind (coord, coord.cz)
 
+## created two data frames with presence data and absence data.
+coord = data.frame (long = coord.full$long [coord.full$antenn == "1"],
+                    lat = coord.full$lat [coord.full$antenn == "1"])
+coord.neg = data.frame (long = coord.full$long [coord.full$antenn == "0"],
+                        lat = coord.full$lat [coord.full$antenn == "0"])
 
 X11()
-plot (coord, xlim=c(0,20), ylim=c(30,50))
+plot (coord, xlim=c(10,25), ylim=c(40,55))
 plot (wrld_simpl, add=T)
 #choose the right (important) climatic variables (http://www.worldclim.org/bioclim) 
 #for your species and stack them! USE ENFA (package adehabitat) for selection of the right variables 
@@ -86,8 +93,10 @@ niche <- extract (variable_crop, coord)
 niche <- as.data.frame (niche)
 X11()
 par (mfrow=c(1,2))
-plot (niche$bio18, niche$bio10, xlab= "prectip of warmest qrt" , ylab= "temp warmest qurt" )
-plot (niche$bio16, niche$bio8 , xlab= "precip of wettest qrt" , ylab= "temp of wettest qrt" )
+plot (niche$bio18, niche$bio10, xlab= "prectip of warmest qrt" 
+      , ylab= "temp warmest qurt" )
+plot (niche$bio16, niche$bio8 , xlab= "precip of wettest qrt" ,
+      ylab= "temp of wettest qrt" )
 
 # MAXENT model (basic setup) - creates values of the model,
 # which are used in checking the behavior of the model 
@@ -109,7 +118,7 @@ response (maxent_all2)
 response (maxent_all5)
 
 #all values
-maxent_all5@results
+maxent_all@results
 
 #just AUC
 maxent_all@results[5]
@@ -117,7 +126,7 @@ maxent_all2@results[5]
 maxent_all5@results[5]
 
 #Predict probability of occurence
-maxent_all_predict<- predict (maxent_all5, variable_crop)
+maxent_all_predict<- predict (maxent_all, variable_crop)
 
 #Plot the prediction
 X11()
