@@ -1,21 +1,28 @@
 rm(list = ls())
+install.packages (c("rgbif", "raster ", "maptools", "XML", "rgdal", "dismo",
+                  "sqldf", "maps ", "testthat", "adehabitatHS", "roxygen2",
+                  "celestial", "ggplot2"))
+install.packages ("rJava")
 library (rgbif)
 library (raster)
 library (maptools)
 library (XML)
 library (rgdal)
 library (dismo)
-library (rgdal)
 library (sqldf)
 library (maps)
 library (testthat)
 library (adehabitatHS)
 library (roxygen2)
 library (celestial)
+library (ggplot2)
+library (rJava)
 data(wrld_simpl) #create the World map with borders
+
 ##trasfering data from our observations in czech republic
 setwd ("C:/Users/jakubecp/Dropbox/SGEM_2015/Article_1")# skola
 setwd ("C:/Users/pavel/Downloads/Dropbox/SGEM_2015/Article_1/") #doma
+setwd ("/home/pavel/Dropbox/SGEM_2015/Article_1 ") #linux
 cz.nic.raw = read.csv ("nicr.czech.csv", header= TRUE, sep=";")
 head(cz.nic.raw)
 ## first solution for transformation of DMS into the decimal degrees 
@@ -72,19 +79,20 @@ coord.neg = data.frame (long = coord.full$long [coord.full$antenn == "0"],
                         lat = coord.full$lat [coord.full$antenn == "0"])
 
 X11()
-plot (coord, xlim=c(10,25), ylim=c(40,55))
+plot (coord, xlim=c(12,25), ylim=c(40,55))
 plot (wrld_simpl, add=T)
 #choose the right (important) climatic variables (http://www.worldclim.org/bioclim) 
 #for your species and stack them! USE ENFA (package adehabitat) for selection of the right variables 
 #if you do not know a lot about them
-setwd ("C:/Users/pavel/Downloads/Vzdelavani/Spatial_modeling/ENM_2015_Varela/climatic_layers/worldclim/")
-
+setwd ("C:/Users/pavel/Downloads/Vzdelavani/Spatial_modeling/
+       ENM_2015_Varela/climatic_layers/worldclim/") #notas
+setwd ("/home/pavel/Documents/ENM_2015_Varela/climatic_layers/worldclim") #linux
 ?enfa
 variable<- stack (c("bio10.bil", "bio18.bil", "bio8.bil", "bio16.bil"))
 
 #optional-if you are interested in more local (and quicker) predictions 
 #make an object (e) of certain extant (xmin, xmax, ymin, ymax) for croping
-e<-extent (-120,40,30,70)
+e<-extent (12,25,40,55)
 #crop your climatic maps
 variable_crop<- crop (variable, e)
 
@@ -131,7 +139,7 @@ maxent_all_predict<- predict (maxent_all, variable_crop)
 #Plot the prediction
 X11()
 plot (maxent_all_predict, 
-      main="Sciodrepoides watsoni distribution (Maxent/all)", xlim =c(-120,40),ylim=c(30,70) )
+      main="Nicrophorus antennatus distribution (Maxent/all)", xlim =c(-120,40),ylim=c(30,70) )
 plot (wrld_simpl, add=TRUE, xlim=c(-120,40),ylim=c(30,70))
 
 #EVALUATION OF THE MAXENT MODEL
