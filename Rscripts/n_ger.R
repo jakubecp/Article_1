@@ -141,13 +141,17 @@ plot (maxent_all_predict,
       main="Nicrophorus germanicus distribution (Maxent/all)", axes=F, legend=F)
 plot (wrld_simpl, add=TRUE, axes=FALSE)
 
-#reclasification
+#reclasification reclasification (based on maximum training sensitivityplus specificity logistic treshold)
 m = c(0.5014,1,1,0,0.5013,0)
 rclmat = matrix (m,ncol=3,byrow=TRUE)
-n.ger_reclas<- reclassify (maxent_all_predict, rclmat)
+endangered_reclas<- reclassify (maxent_all_predict, rclmat)
 X11()
-plot (n.ger_reclas)
-plot (wrld_simpl, add=TRUE, axes=FALSE)
+plot (endangered_reclas)
+#plot (wrld_simpl, add=TRUE, axes=FALSE) #not a best resolution
+map("world", interior = TRUE, xlim=c(0,80), ylim=c(20,70), add=TRUE)#this is better resolution
+#map("world", boundary = FALSE, col="gray", add = TRUE) #this could make an interior 
+#of europe be with gray boarders
+
 
 points (nicveo$data$decimalLongitude [nicveo$data$decimalLongitude>0],
         nicveo$data$decimalLatitude[nicveo$data$decimalLongitude>0], 

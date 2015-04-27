@@ -16,6 +16,7 @@ library (roxygen2)
 library (celestial)
 library (ggplot2)
 library (rJava)
+library (maps)
 
 data(wrld_simpl) #create the World map with borders
 ##trasfering data from our observations in czech republic
@@ -139,6 +140,19 @@ X11()
 plot (maxent_all_predict, 
       main="Nicrophorus antennatus distribution (Maxent/all)", xlim =c(-120,40),ylim=c(30,70) )
 plot (wrld_simpl, add=TRUE, xlim=c(-120,40),ylim=c(30,70))
+
+
+#reclasification reclasification (based on maximum training sensitivityplus specificity logistic treshold)
+m = c(0.5014,1,1,0,0.5013,0)
+rclmat = matrix (m,ncol=3,byrow=TRUE)
+endangered_reclas<- reclassify (maxent_all_predict, rclmat)
+X11()
+plot (endangered_reclas)
+#plot (wrld_simpl, add=TRUE, axes=FALSE) #not a best resolution
+map("world", interior = TRUE, xlim=c(0,80), ylim=c(20,70), add=TRUE)#this is better resolution
+#map("world", boundary = FALSE, col="gray", add = TRUE) #this could make an interior 
+#of europe be with gray boarders
+
 
 #EVALUATION OF THE MAXENT MODEL
 #crete object with random split of the data into k(5) subsamples by kfold
