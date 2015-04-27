@@ -153,6 +153,12 @@ map("world", interior = TRUE, xlim=c(0,80), ylim=c(20,70), add=TRUE)#this is bet
 #map("world", boundary = FALSE, col="gray", add = TRUE) #this could make an interior 
 #of europe be with gray boarders
 
+#experiments with maps - This is IT!!!
+library (rworldmap)
+newmap = getMap(resolution="low")
+plot (endangered_reclas)
+plot (newmap, xlim=c(5,45), ylim=c(42,56), add=T)
+
 
 #EVALUATION OF THE MAXENT MODEL
 #crete object with random split of the data into k(5) subsamples by kfold
