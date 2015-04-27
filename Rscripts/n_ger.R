@@ -55,28 +55,28 @@ for (i in 1:n) {
 }
 
 #RAW data from GBIF (only records with coordinates and you should set up upper limit of them)
-n.sep<- occ_search(scientificName = "Nicrophorus sepultor",
+n.ger<- occ_search(scientificName = "Nicrophorus germanicus",
                    hasCoordinate= TRUE, limit = 500)
 #coordinates of observations (filter out NAs and obvious mistakes!)
-coord <- data.frame (long = n.sep$data$decimalLongitude ,
-                     lat= n.sep$data$decimalLatitude)
+coord <- data.frame (long = n.ger$data$decimalLongitude ,
+                     lat= n.ger$data$decimalLatitude)
 
 ## merge three datasets cz.lat, cz.long, antennatus (0,1), 
 ## + decimalLongitude and decimalLatitude
 # new line to coord data frame with presence/absence data
-sep = c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
-length (sep)
-coord = data.frame (coord, sep)
+ger = c(1,1,1,1,1,1)
+length (ger)
+coord = data.frame (coord, ger)
 ## bind data from previous manipulation (dms to dd) with presence/absence data
-coord.cz = data.frame (long = cz.long, lat = cz.lat, sep = cz.nic.raw$sepultor)
+coord.cz = data.frame (long = cz.long, lat = cz.lat, ger = cz.nic.raw$germanicus)
 ## bind both dataframes (GBIF + CZ) together
 coord.full = rbind (coord, coord.cz)
 
 ## created two data frames with presence data and absence data.
-coord = data.frame (long = coord.full$long [coord.full$sep == "1"],
-                    lat = coord.full$lat [coord.full$sep == "1"])
-coord.neg = data.frame (long = coord.full$long [coord.full$sep == "0"],
-                        lat = coord.full$lat [coord.full$sep == "0"])
+coord = data.frame (long = coord.full$long [coord.full$ger == "1"],
+                    lat = coord.full$lat [coord.full$ger == "1"])
+coord.neg = data.frame (long = coord.full$long [coord.full$ger == "0"],
+                        lat = coord.full$lat [coord.full$ger == "0"])
 
 X11()
 plot (coord)
@@ -138,11 +138,10 @@ maxent_all_predict<- predict (maxent_all, variable_crop)
 #Plot the prediction
 X11()
 plot (maxent_all_predict, 
-      main="Nicrophorus sepultor distribution (Maxent/all)", axes=F)
+      main="Nicrophorus germanicus distribution (Maxent/all)", axes=F, legend=F)
 plot (wrld_simpl, add=TRUE, axes=FALSE)
 
-
-#reclasification (based on maximum training sensitivityplus specificity logistic treshold)
+#reclasification
 m = c(0.5014,1,1,0,0.5013,0)
 rclmat = matrix (m,ncol=3,byrow=TRUE)
 n.ger_reclas<- reclassify (maxent_all_predict, rclmat)
@@ -150,6 +149,9 @@ X11()
 plot (n.ger_reclas)
 plot (wrld_simpl, add=TRUE, axes=FALSE)
 
+points (nicveo$data$decimalLongitude [nicveo$data$decimalLongitude>0],
+        nicveo$data$decimalLatitude[nicveo$data$decimalLongitude>0], 
+        pch=16, col="red", main = "wettest" )
 
 #EVALUATION OF THE MAXENT MODEL
 #crete object with random split of the data into k(5) subsamples by kfold
