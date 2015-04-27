@@ -1,13 +1,12 @@
 rm(list = ls())
 install.packages (c("rgbif", "raster ", "maptools", "XML", "rgdal", "dismo",
                   "sqldf", "maps ", "testthat", "adehabitatHS", "roxygen2",
-                  "celestial", "ggplot2"))
-install.packages ("rJava")
-library (rgbif)
+                  "celestial", "ggplot2", "rJava"))
+library (rgbif) #nefunguje pod ubuntu
 library (raster)
 library (maptools)
-library (XML)
-library (rgdal)
+library (XML) #nefunguje pod ubuntu
+library (rgdal) #nefunguje pod ubuntu
 library (dismo)
 library (sqldf)
 library (maps)
@@ -17,8 +16,8 @@ library (roxygen2)
 library (celestial)
 library (ggplot2)
 library (rJava)
-data(wrld_simpl) #create the World map with borders
 
+data(wrld_simpl) #create the World map with borders
 ##trasfering data from our observations in czech republic
 setwd ("C:/Users/jakubecp/Dropbox/SGEM_2015/Article_1")# skola
 setwd ("C:/Users/pavel/Downloads/Dropbox/SGEM_2015/Article_1/") #doma
@@ -84,15 +83,14 @@ plot (wrld_simpl, add=T)
 #choose the right (important) climatic variables (http://www.worldclim.org/bioclim) 
 #for your species and stack them! USE ENFA (package adehabitat) for selection of the right variables 
 #if you do not know a lot about them
-setwd ("C:/Users/pavel/Downloads/Vzdelavani/Spatial_modeling/
-       ENM_2015_Varela/climatic_layers/worldclim/") #notas
+setwd ("C:/Users/pavel/Downloads/Vzdelavani/Spatial_modeling/ENM_2015_Varela/climatic_layers/worldclim/") #notas
 setwd ("/home/pavel/Documents/ENM_2015_Varela/climatic_layers/worldclim") #linux
 ?enfa
-variable<- stack (c("bio10.bil", "bio18.bil", "bio8.bil", "bio16.bil"))
+variable<- stack (c("bio10.bil", "bio8.bil", "bio16.bil", "bio1.bil"))
 
 #optional-if you are interested in more local (and quicker) predictions 
 #make an object (e) of certain extant (xmin, xmax, ymin, ymax) for croping
-e<-extent (12,25,40,55)
+e<-extent (0,40,40,53)
 #crop your climatic maps
 variable_crop<- crop (variable, e)
 
@@ -101,7 +99,7 @@ niche <- extract (variable_crop, coord)
 niche <- as.data.frame (niche)
 X11()
 par (mfrow=c(1,2))
-plot (niche$bio18, niche$bio10, xlab= "prectip of warmest qrt" 
+plot (niche$bio1, niche$bio10, xlab= "prectip of warmest qrt" 
       , ylab= "temp warmest qurt" )
 plot (niche$bio16, niche$bio8 , xlab= "precip of wettest qrt" ,
       ylab= "temp of wettest qrt" )
@@ -178,9 +176,9 @@ dim(occtest)
 #testing on pseudoabsences (number 100 is estimated based on the dim value)
 pseudoabsence <- randomPoints (variable_crop, 650)
 x11()
-plot (pseudoabsence)
+plot (coord.neg)
 plot (wrld_simpl,add=T)
-points (occtest, col="red")
+points (coord, col="red")
 
 #evaluation compare the value of AUC 
 #from this evaluate_nicveo with value of training set 
