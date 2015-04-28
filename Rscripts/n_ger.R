@@ -84,14 +84,15 @@ plot (wrld_simpl, add=T)
 #choose the right (important) climatic variables (http://www.worldclim.org/bioclim) 
 #for your species and stack them! USE ENFA (package adehabitat) for selection of the right variables 
 #if you do not know a lot about them
+setwd ("F:/Spatial_modeling/ENM_2015_Varela/climatic_layers/worldclim ")#disk 2 skola
 setwd ("C:/Users/pavel/Downloads/Vzdelavani/Spatial_modeling/ENM_2015_Varela/climatic_layers/worldclim/") #notas
 setwd ("/home/pavel/Documents/ENM_2015_Varela/climatic_layers/worldclim") #linux
 ?enfa
-variable<- stack (c("bio10.bil", "bio8.bil", "bio16.bil", "bio1.bil"))
+variable<- stack (c("bio10.bil", "bio8.bil", "bio16.bil", "bio1.bil")) #(c("bio10.bil", "bio8.bil", "bio2.bil", "bio1.bil"))
 
 #optional-if you are interested in more local (and quicker) predictions 
 #make an object (e) of certain extant (xmin, xmax, ymin, ymax) for croping
-e<-extent (5,45,42,56)
+e<-extent (-10,38,35,65)
 #crop your climatic maps
 variable_crop<- crop (variable, e)
 
@@ -142,25 +143,30 @@ plot (maxent_all_predict,
 plot (wrld_simpl, add=TRUE, axes=FALSE)
 
 #reclasification reclasification (based on maximum training sensitivityplus specificity logistic treshold)
-m = c(0.5014,1,1,0,0.5013,0)
+m = c(0.4666,1,1,0,0.4665,0)
 rclmat = matrix (m,ncol=3,byrow=TRUE)
 endangered_reclas<- reclassify (maxent_all_predict, rclmat)
 X11()
 plot (endangered_reclas)
 #plot (wrld_simpl, add=TRUE, axes=FALSE) #not a best resolution
-map("world", interior = TRUE, xlim=c(0,80), ylim=c(20,70), add=TRUE)#this is better resolution
+#map("world", interior = TRUE, xlim=c(0,80), ylim=c(20,70), add=TRUE)#this is better resolution
 #map("world", boundary = FALSE, col="gray", add = TRUE) #this could make an interior 
 #of europe be with gray boarders
 
 #experiments with maps - This is IT!!!
 library (rworldmap)
 newmap = getMap(resolution="low")
-plot (endangered_reclas)
+X11()
+plot (endangered_reclas, legend=F, xlim=c(-10,35), ylim=c(35,65))
 plot (newmap, xlim=c(5,45), ylim=c(42,56), add=T)
 
-points (nicveo$data$decimalLongitude [nicveo$data$decimalLongitude>0],
-        nicveo$data$decimalLatitude[nicveo$data$decimalLongitude>0], 
-        pch=16, col="red", main = "wettest" )
+##EXport to TIFF
+setwd ("C:/Users/jakubecp/Dropbox/SGEM_2015/Article_1")# skola
+tiff (filename="germanicus.tiff", width=5000, height=5000, 
+      compression="lzw", res= 800)
+plot (endangered_reclas, legend=F, xlim=c(-10,35), ylim=c(35,65))
+plot (newmap, xlim=c(5,45), ylim=c(42,56), add=T)
+dev.off()
 
 #EVALUATION OF THE MAXENT MODEL
 #crete object with random split of the data into k(5) subsamples by kfold
