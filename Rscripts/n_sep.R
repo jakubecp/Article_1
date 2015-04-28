@@ -145,7 +145,7 @@ plot (wrld_simpl, add=TRUE, axes=FALSE)
 
 
 #reclasification (based on maximum training sensitivityplus specificity logistic treshold)
-m = c(0.4437,1,1,0,0.4436,0)
+m = c(0.4263,1,1,0,0.4262,0)
 rclmat = matrix (m,ncol=3,byrow=TRUE)
 endangered_reclas<- reclassify (maxent_all_predict, rclmat)
 X11()
