@@ -66,6 +66,7 @@ coord <- data.frame (long = n.ant$data$decimalLongitude ,
 ## + decimalLongitude and decimalLatitude
 # new line to coord data frame with presence/absence data
 antenn = c(1,1,1,1,1,1,1,1,1,1)
+length(antenn)
 coord = data.frame (coord, antenn)
 ## bind data from previous manipulation (dms to dd) with presence/absence data
 coord.cz = data.frame (long = cz.long, lat = cz.lat, antenn = cz.nic.raw$antennatus)
