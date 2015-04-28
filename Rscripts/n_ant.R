@@ -16,7 +16,7 @@ library (roxygen2)
 library (celestial)
 library (ggplot2)
 library (rJava)
-library (maps)
+
 
 data(wrld_simpl) #create the World map with borders
 ##trasfering data from our observations in czech republic
