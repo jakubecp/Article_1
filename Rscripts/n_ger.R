@@ -16,6 +16,7 @@ library (roxygen2)
 library (celestial)
 library (ggplot2)
 library (rJava)
+library (rworldmap)
 
 data(wrld_simpl) #create the World map with borders
 ##trasfering data from our observations in czech republic
@@ -112,26 +113,26 @@ plot (niche$bio16, niche$bio8 , xlab= "precip of wettest qrt" ,
 maxent_all <- maxent (variable_crop, coord, args=c("maximumbackground=1000",
                                                    "betamultiplier=1",
                                                    "defaultprevalence=0.5"))
-maxent_all2 <- maxent (variable_crop, coord, args=c("maximumbackground=1000",
-                                                    "betamultiplier=2",
-                                                    "defaultprevalence=0.5"))
-maxent_all5 <- maxent (variable_crop, coord, args=c("maximumbackground=1000",
-                                                    "betamultiplier=5",
-                                                    "defaultprevalence=0.5"))
+# maxent_all2 <- maxent (variable_crop, coord, args=c("maximumbackground=1000",
+#                                                     "betamultiplier=2",
+#                                                     "defaultprevalence=0.5"))
+# maxent_all5 <- maxent (variable_crop, coord, args=c("maximumbackground=1000",
+#                                                     "betamultiplier=5",
+#                                                     "defaultprevalence=0.5"))
 #check the behavior of your data to variables (graph) and play
 #with "betamultiplier" for smoother model of climatic variables (values= 1 - inf)
 X11()
 response (maxent_all)
-response (maxent_all2)
-response (maxent_all5)
+# response (maxent_all2)
+# response (maxent_all5)
 
 #all values
 maxent_all@results
 
 #just AUC
 maxent_all@results[5]
-maxent_all2@results[5]
-maxent_all5@results[5]
+# maxent_all2@results[5]
+# maxent_all5@results[5]
 
 #Predict probability of occurence
 maxent_all_predict<- predict (maxent_all, variable_crop)
@@ -154,14 +155,13 @@ plot (endangered_reclas)
 #of europe be with gray boarders
 
 #experiments with maps - This is IT!!!
-library (rworldmap)
 newmap = getMap(resolution="low")
 X11()
 plot (endangered_reclas, legend=F, xlim=c(-10,35), ylim=c(35,65))
 plot (newmap, xlim=c(5,45), ylim=c(42,56), add=T)
 
 ##EXport to TIFF
-setwd ("C:/Users/jakubecp/Dropbox/SGEM_2015/Article_1")# skola
+setwd ("C:/Users/pavel/Downloads/Dropbox/SGEM_2015/Article_1/") #doma
 tiff (filename="germanicus.tiff", width=5000, height=5000, 
       compression="lzw", res= 800)
 plot (endangered_reclas, legend=F, xlim=c(-10,35), ylim=c(35,65))

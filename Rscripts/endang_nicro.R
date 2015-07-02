@@ -18,33 +18,34 @@ library (ggplot2)
 library (rJava)
 library (maps)
 
+
 data(wrld_simpl) #create the World map with borders
 ##trasfering data from our observations in czech republic
-setwd ("C:/Users/jakubecp/Dropbox/SGEM_2015/Article_1")# skola
+#setwd ("C:/Users/jakubecp/Dropbox/SGEM_2015/Article_1")# skola
 setwd ("C:/Users/pavel/Downloads/Dropbox/SGEM_2015/Article_1/") #doma
-setwd ("/home/pavel/Dropbox/SGEM_2015/Article_1 ") #linux
+#setwd ("/home/pavel/Dropbox/SGEM_2015/Article_1 ") #linux
 cz.nic.raw = read.csv ("nicr.czech.csv", header= TRUE, sep=";")
 head(cz.nic.raw)
 ## first solution for transformation of DMS into the decimal degrees 
 ## with function convert
-convert<-function(coord){
-  tmp1=strsplit(coord,"D")
-  tmp2=strsplit(tmp1[[1]][2],"M")
-  tmp3=strsplit(tmp2[[1]][2],"S")
-  dec=c(as.numeric(tmp1[[1]][1]),as.numeric(tmp2[[1]][1]),as.numeric(tmp3[[1]]))
-  c<-abs(dec[1])+dec[2]/60+dec[3]/3600
-  c<-ifelse(dec[1]<0,-c,c)
-  return(c)
-}
-n1=length(cz.nic.raw$lat)
-n2=length(cz.nic.raw$long)
-cz.lat= c()
-cz.long=c()
-for (i in 1:n1) {
-  cz.lat[i]=convert (as.character (cz.nic.raw[i,5]))
-  cz.long[i]=convert (as.character (cz.nic.raw[i,6]))
-  
-}
+# convert<-function(coord){
+#   tmp1=strsplit(coord,"D")
+#   tmp2=strsplit(tmp1[[1]][2],"M")
+#   tmp3=strsplit(tmp2[[1]][2],"S")
+#   dec=c(as.numeric(tmp1[[1]][1]),as.numeric(tmp2[[1]][1]),as.numeric(tmp3[[1]]))
+#   c<-abs(dec[1])+dec[2]/60+dec[3]/3600
+#   c<-ifelse(dec[1]<0,-c,c)
+#   return(c)
+# }
+# n1=length(cz.nic.raw$lat)
+# n2=length(cz.nic.raw$long)
+# cz.lat= c()
+# cz.long=c()
+# for (i in 1:n1) {
+#   cz.lat[i]=convert (as.character (cz.nic.raw[i,5]))
+#   cz.long[i]=convert (as.character (cz.nic.raw[i,6]))
+#   
+# }
 ## second solution for transformation of DMS to decimal degrees
 ## with celestila packages and function dms2deg
 n=length(cz.nic.raw$lat)
@@ -85,7 +86,7 @@ plot (wrld_simpl, add=T)
 #for your species and stack them! USE ENFA (package adehabitat) for selection of the right variables 
 #if you do not know a lot about them
 setwd ("C:/Users/pavel/Downloads/Vzdelavani/Spatial_modeling/ENM_2015_Varela/climatic_layers/worldclim/") #notas
-setwd ("/home/pavel/Documents/ENM_2015_Varela/climatic_layers/worldclim") #linux
+#setwd ("/home/pavel/Documents/ENM_2015_Varela/climatic_layers/worldclim") #linux
 ?enfa
 variable<- stack (c("bio10.bil", "bio8.bil", "bio16.bil", "bio1.bil"))
 
@@ -111,26 +112,26 @@ plot (niche$bio16, niche$bio8 , xlab= "precip of wettest qrt" ,
 maxent_all <- maxent (variable_crop, coord, args=c("maximumbackground=1000",
                                                    "betamultiplier=1",
                                                    "defaultprevalence=0.5"))
-maxent_all2 <- maxent (variable_crop, coord, args=c("maximumbackground=1000",
-                                                    "betamultiplier=2",
-                                                    "defaultprevalence=0.5"))
-maxent_all5 <- maxent (variable_crop, coord, args=c("maximumbackground=1000",
-                                                    "betamultiplier=5",
-                                                    "defaultprevalence=0.5"))
+# #maxent_all2 <- maxent (variable_crop, coord, args=c("maximumbackground=1000",
+#                                                     "betamultiplier=2",
+#                                                     "defaultprevalence=0.5"))
+# #maxent_all5 <- maxent (variable_crop, coord, args=c("maximumbackground=1000",
+#                                                     "betamultiplier=5",
+#                                                     "defaultprevalence=0.5"))
 #check the behavior of your data to variables (graph) and play
 #with "betamultiplier" for smoother model of climatic variables (values= 1 - inf)
 X11()
 response (maxent_all)
-response (maxent_all2)
-response (maxent_all5)
+# response (maxent_all2)
+# response (maxent_all5)
 
 #all values
 maxent_all@results
 
 #just AUC
 maxent_all@results[5]
-maxent_all2@results[5]
-maxent_all5@results[5]
+# maxent_all2@results[5]
+# maxent_all5@results[5]
 
 #Predict probability of occurence
 maxent_all_predict<- predict (maxent_all, variable_crop)
@@ -146,19 +147,26 @@ plot (wrld_simpl, add=TRUE, xlim=c(-120,40),ylim=c(30,70))
 m = c(0.5014,1,1,0,0.5013,0)
 rclmat = matrix (m,ncol=3,byrow=TRUE)
 endangered_reclas<- reclassify (maxent_all_predict, rclmat)
-X11()
-plot (endangered_reclas)
+#X11()
+#plot (endangered_reclas)
 #plot (wrld_simpl, add=TRUE, axes=FALSE) #not a best resolution
-map("world", interior = TRUE, xlim=c(0,80), ylim=c(20,70), add=TRUE)#this is better resolution
+#map("world", interior = TRUE, xlim=c(0,80), ylim=c(20,70), add=TRUE)#this is better resolution
 #map("world", boundary = FALSE, col="gray", add = TRUE) #this could make an interior 
 #of europe be with gray boarders
 
 #experiments with maps - This is IT!!!
-library (rworldmap)
+
 newmap = getMap(resolution="low")
 plot (endangered_reclas)
 plot (newmap, xlim=c(5,45), ylim=c(42,56), add=T)
 
+##EXport to TIFF
+setwd ("C:/Users/jakubecp/Dropbox/SGEM_2015/Article_1")# skola
+tiff (filename="anennatus.tiff", width=5000, height=5000, 
+      compression="lzw", res= 800)
+plot (endangered_reclas, legend=F, xlim=c(-10,35), ylim=c(35,65))
+plot (newmap, xlim=c(5,45), ylim=c(42,56), add=T)
+dev.off()
 #EVALUATION OF THE MAXENT MODEL
 #crete object with random split of the data into k(5) subsamples by kfold
 fold <- kfold(coord,k=5)
