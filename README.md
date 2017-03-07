@@ -1,8 +1,8 @@
-# Article_1
-## Endangered Nicrophorinae of the Czech Republic
+# SGEM 2017
+## Spatial distribution modeling of Thanatophilus sinuatus (Coleoptera: Silphinae) in the Czech Republic
 
 ###Abstract
-Burying beetles of genus Nicrophorus are an important part of the North Hemisphere ecosystems. They are providing valuable ecosystem services by promoting nutrient cycling and biological control of pests. The presence of four endangered burying beetles was previously reported from the Czech Republic and our goal was to confirm their presence and to evaluate the main threads. The study was conducted in four selected regions around fallowing cities Louny, Kolín, Bøeclav and Zábøeh in 2008 and 2009. The selection was based on the previous observations of these beetles or presence of suitable environmental conditions. In these regions we selected suitable localities and placed the line of five baited pitfall traps on each. These traps were exposed three times a year only for two weeks period in activity peaks of target species (spring, summer and fall). In total we obtained 2541 specimens of three endangered burying beetles (Nicrophorus antennatus (55 specimens in Louny and Břeclav), N. germanicus (236 specimens in Louny, Břeclav and Zábøeh) and N. sepultor (2250 specimens across all regions)). Comparison with historical data suggests, that populations of N. antennatus, N. germanicus and N. sepultor are slowly recovering from previous devastation. We confirmed that biodiversity centers of these species are at lowland's open-landscapes, which are also centers of intensive agriculture. This pose a major threat to their abundance, because they could be heavily impacted by farming practices such as the use of broad spectrum pesticides or deep plowing. If we would like to protect these beetles than it is important to minimize the use of broad spectrum pesticides by farmers in the regions where they are present and especially during the breeding season.
- 
-*Keywords: Silphidae, Nicrophorinae, endangered, Czech Republic, nature protection
+Carrion beetles of genus Thantophilus are an important part of the North Hemisphere ecosystems. They are providing valuable ecosystem services by promoting nutrient cycling and biological control of pests. The presence of Thanatophilus sinuatus is well known in the Czech Republic and our goal was to model the possible occurence by using statistical methods. The study based on observations of the species in the Czech Republic and other Central European countries. 
+
+*Keywords: Silphidae; Thanatophilus; spatial modelling; Czech Republic; nature, MaxEnt 
 
